@@ -173,6 +173,15 @@ namespace ivs_event_client
             var reply = client.ReportEvent(nevent);
             Console.WriteLine("Greeting: " + reply.Message);
 
+            HeartbeatRequest hr = new HeartbeatRequest();
+            hr.DeviceAddress = "127.0.0.1";
+            hr.DeviceIdent = "i am a deivce";
+            //异步调用心跳请求
+            var hr_reply = client.HeartbeatAsync(hr);
+            //等待异步操作返回，具体实现时可以使用完整异步机制
+            hr_reply.ResponseAsync.Wait();
+            Console.WriteLine("Heartbeat over: "+ hr_reply.ResponseAsync.Result);
+
             channel.ShutdownAsync().Wait();
             Console.WriteLine("Press any key to exit...");
             Console.ReadKey();
@@ -190,15 +199,20 @@ using Suresecureivs;
 
 namespace ivs_event_server
 {
-    //实现接收报警服务
-    class EventReporttingImpl : EventReporting.EventReportingBase
+    //服务端实现服务
+    class SurvCenterServiceImpl : SurvCenterService.SurvCenterServiceBase
     {
-        // Server side handler of the SayHello RPC
-        public override Task<ReportEventReply> ReportEvent(Event request, ServerCallContext context)
+        //实现接收报警事件服务
+        public override Task<GeneralReply> ReportEvent(Event request, ServerCallContext context)
         {
-            //接收到报警以后简单回复
             Console.WriteLine(request.AnnoImgs);
-            return Task.FromResult(new ReportEventReply { Message = "Hello " + request.Description });
+            return Task.FromResult(new GeneralReply { Message = "Hello " + request.Description });
+        }
+        //实现接收心跳服务
+        public override Task<GeneralReply> Heartbeat(HeartbeatRequest request, ServerCallContext context)
+        {
+            Console.WriteLine("Heart Get: " + request.DeviceAddress + ", " + request.DeviceIdent);
+            return Task.FromResult(new GeneralReply { Message = "Get heartbeat!" });
         }
     }
 
@@ -208,18 +222,20 @@ namespace ivs_event_server
 
         public static void Main(string[] args)
         {
-            //新建服务器，并绑定服务
+            //建立服务器，并绑定服务
             Server server = new Server
             {
-                Services = { EventReporting.BindService(new EventReporttingImpl()) },
+                Services = { SurvCenterService.BindService(new SurvCenterServiceImpl()) },
                 Ports = { new ServerPort("localhost", Port, ServerCredentials.Insecure) }
             };
+            //启动服务器
             server.Start();
 
             Console.WriteLine("Greeter server listening on port " + Port);
             Console.WriteLine("Press any key to stop the server...");
             Console.ReadKey();
 
+            //结束服务器
             server.ShutdownAsync().Wait();
         }
     }
