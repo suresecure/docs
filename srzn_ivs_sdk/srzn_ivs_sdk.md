@@ -109,6 +109,8 @@ message HeartbeatRequest{
 ```
 
 ##Csharp调用示例
+附件内包含了模拟报警信息发送程序和模拟报警信息接收程序的源码供参考，
+其他语言的客户端与服务端实现请参考GRPC官方文档。
 ```csharp
 int main()
 {
