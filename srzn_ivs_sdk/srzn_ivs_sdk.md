@@ -118,6 +118,7 @@ message HeartbeatRequest{
 Protobuf Csharp 3.20
 Grpc Tool
 （如果NUGET版本不够请升级）,
+vs2013未找到与约束匹配的导出
 解决方法：
 1.关闭VS；
 2.去C:/Users/<your users name>/AppData/Local/Microsoft/VisualStudio/12.0/ComponentModelCache文件夹下删除所有文件及文件夹；
