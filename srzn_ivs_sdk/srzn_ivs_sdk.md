@@ -110,11 +110,37 @@ message HeartbeatRequest{
 
 ##Csharp调用示例
 附件内包含了模拟报警信息发送程序和模拟报警信息接收程序的源码供参考，
-其他语言的客户端与服务端实现请参考GRPC官方文档。
+###环境需求
+* .NET Framework 4.5+
+* Visual Studio 2013 or 2015. DEMO程序为VS2013编译
+
+###使用NUGET安装依赖包
+Protobuf Csharp 3.20
+Grpc Tool
+（如果NUGET版本不够请升级）,
+解决方法：
+1.关闭VS；
+2.去C:/Users/<your users name>/AppData/Local/Microsoft/VisualStudio/12.0/ComponentModelCache文件夹下删除所有文件及文件夹；
+3.重新打开VS即可。
+在提供的DEMO项目中已经包含了依赖包说明，只需要打开SLN文件，
+通常会自动下载依赖包，否则可以点击项目->启用NuGet程序包还原。
+
+###程序编译
+请首先执行DEMO目录下的generate.bat文件来生成C#代理类。
+SLN中共包含3个项目，event、ivs-event-client、ivs-event-server，
+分别包含event代理类、模拟客户端、模拟服务端。
+GRPC代理类包含两个文件Event.cs和EventGrpc.cs，分别封装proto文件的message和rpc。
+
+####模拟客户端
+
+####模拟服务端
+
 ```csharp
 int main()
 {
   return 0;
 }
 ```
+
+其他语言的客户端与服务端实现请参考GRPC官方文档。
 
