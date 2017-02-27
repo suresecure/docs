@@ -115,31 +115,114 @@ message HeartbeatRequest{
 * Visual Studio 2013 or 2015. DEMO程序为VS2013编译
 
 ###使用NUGET安装依赖包
-Protobuf Csharp 3.20
-Grpc Tool
-（如果NUGET版本不够请升级）,
+```
+  <package id="Google.Protobuf" version="3.2.0" targetFramework="net45" />
+  <package id="Grpc" version="1.1.0" targetFramework="net45" />
+  <package id="Grpc.Core" version="1.1.0" targetFramework="net45" />
+  <package id="System.Interactive.Async" version="3.1.1" targetFramework="net45" />
+```
+如果NUGET版本不够请升级，在升级以后如果遇到如下错误：
 vs2013未找到与约束匹配的导出
 解决方法：
-1.关闭VS；
-2.去C:/Users/<your users name>/AppData/Local/Microsoft/VisualStudio/12.0/ComponentModelCache文件夹下删除所有文件及文件夹；
-3.重新打开VS即可。
+
+- 关闭VS；
+- 去```C:/Users/<your users name>/AppData/Local/Microsoft/VisualStudio/12.0/ComponentModelCache```文件夹下删除所有文件及文件夹；
+- 重新打开VS即可。
+
 在提供的DEMO项目中已经包含了依赖包说明，只需要打开SLN文件，
-通常会自动下载依赖包，否则可以点击项目->启用NuGet程序包还原。
+通常会自动下载依赖包，否则可以点击```项目->启用NuGet程序包还原```。
 
 ###程序编译
-请首先执行DEMO目录下的generate.bat文件来生成C#代理类。
-SLN中共包含3个项目，event、ivs-event-client、ivs-event-server，
-分别包含event代理类、模拟客户端、模拟服务端。
-GRPC代理类包含两个文件Event.cs和EventGrpc.cs，分别封装proto文件的message和rpc。
+请首先执行DEMO目录下的generate_protos.bat文件来生成C#代理类。
+SLN中共包含3个项目，srzn-ivs-sdk、ivs-event-client、ivs-event-server，
+分别包含代理类、模拟客户端、模拟服务端。
+GRPC代理类包含两个文件Suresecureivs.cs和SuresecureivsGrpc.cs，分别封装proto文件的message和rpc。
 
-####模拟客户端
+###示例客户端
+```cs
+using System;
+using Grpc.Core;
+using Suresecureivs;
 
-####模拟服务端
-
-```csharp
-int main()
+namespace ivs_event_client
 {
-  return 0;
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            //建立通道
+            Channel channel = new Channel("127.0.0.1:50051", ChannelCredentials.Insecure);
+
+            //新建客户端
+            var client = new SurvCenterService.SurvCenterServiceClient(channel);
+            //任意设置一些属性值
+            String user = "you";
+            //新建报警事件
+            Event nevent = new Event();
+            nevent.Description = user;
+            //新建报警事件图片
+            AnnotatedImage anno_img = new AnnotatedImage();
+            //将二进制JPEG码流拷贝到报警事件图片中
+            anno_img.Img = Google.Protobuf.ByteString.CopyFrom(new byte[] { 1, 2 });
+            //设置报警事件图片中的目标
+            Target target = new Target { X = 1, Y = 2, W = 3, H = 4, Type = Target.Types.Type.Person };
+            anno_img.Targets.Add(target);
+            nevent.AnnoImgs.Add(anno_img);
+
+            //向服务器提交报警事件
+            var reply = client.ReportEvent(nevent);
+            Console.WriteLine("Greeting: " + reply.Message);
+
+            channel.ShutdownAsync().Wait();
+            Console.WriteLine("Press any key to exit...");
+            Console.ReadKey();
+        }
+    }
+}
+```
+
+###示例服务端
+```cs
+using System;
+using System.Threading.Tasks;
+using Grpc.Core;
+using Suresecureivs;
+
+namespace ivs_event_server
+{
+    //实现接收报警服务
+    class EventReporttingImpl : EventReporting.EventReportingBase
+    {
+        // Server side handler of the SayHello RPC
+        public override Task<ReportEventReply> ReportEvent(Event request, ServerCallContext context)
+        {
+            //接收到报警以后简单回复
+            Console.WriteLine(request.AnnoImgs);
+            return Task.FromResult(new ReportEventReply { Message = "Hello " + request.Description });
+        }
+    }
+
+    class Program
+    {
+        const int Port = 50051;
+
+        public static void Main(string[] args)
+        {
+            //新建服务器，并绑定服务
+            Server server = new Server
+            {
+                Services = { EventReporting.BindService(new EventReporttingImpl()) },
+                Ports = { new ServerPort("localhost", Port, ServerCredentials.Insecure) }
+            };
+            server.Start();
+
+            Console.WriteLine("Greeter server listening on port " + Port);
+            Console.WriteLine("Press any key to stop the server...");
+            Console.ReadKey();
+
+            server.ShutdownAsync().Wait();
+        }
+    }
 }
 ```
 
