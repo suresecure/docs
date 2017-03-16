@@ -1,9 +1,9 @@
 ---
-title: 智能分析接口说明
-author: 湖南戍融智能科技有限公司xcq
+title: 智能分析设备与管理程序接口说明
+author: 湖南戍融智能科技有限公司
 date: 20170227
 institute: 戍融智能 
-toc-title: content
+toc-title: 目录
 
 ---
 
