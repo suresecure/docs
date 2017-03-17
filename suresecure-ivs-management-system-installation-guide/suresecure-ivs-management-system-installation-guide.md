@@ -27,7 +27,7 @@ toc-title: 目录
 
 使用光驱或者虚拟光驱加载光盘或者ISO文件后，将出现以下界面：请选择“全新sqlserver独立安装或向现有安装添加功能”。
 
-![](media/image3.png){width="6.020833333333333in" height="4.5in"}
+![](media/image3.png)
 
 ### 1.3安装程序支持规则
 
