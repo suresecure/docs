@@ -29,7 +29,9 @@ do
 			for mdfile in *.md
 			do
 				echo $mdfile
-				pandoc -o ../pub/${dir}/${mdfile}.html ${mdfile} -s --template ../markdown-pandoc-template-bootstrap/template.html --css ../markdown-pandoc-template-bootstrap/template.css --toc --toc-depth 2
+        pandoc -o ../pub/${dir}/${mdfile}.html ${mdfile} -s --template ../markdown-pandoc-template-bootstrap/template.html --css ../markdown-pandoc-template-bootstrap/template.css --toc --toc-depth 2
+        #pandoc -o ../pub/${dir}/${mdfile}.html ${mdfile} -s --template ../markdown-pandoc-template-bootstrap/template.html --css ../markdown-pandoc-template-bootstrap/pandoc.css --toc --toc-depth 2
+				#pandoc -o ../pub/${dir}/${mdfile}.html ${mdfile} -s --template ../markdown-pandoc-template-bootstrap/template.html --css ../markdown-pandoc-template-bootstrap/github-pandoc.css --toc --toc-depth 2
 				pandoc -o ../pub/${dir}/${mdfile}.pdf ${mdfile} --latex-engine=xelatex -V CJKmainfont='Microsoft YaHei' --toc --toc-depth 2
 				# pandoc -o ../pub/${dir}/${mdfile}.pdf ${mdfile} --listings -H ../listings-setup.tex --latex-engine=xelatex -V CJKmainfont='STKaiti' --toc --toc-depth 2
 			done
