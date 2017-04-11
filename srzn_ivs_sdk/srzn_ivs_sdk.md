@@ -160,7 +160,8 @@ git clone --recursive https://github.com/suresecure/ivs-sdk-demo-cpp.git
 
 
 ##Csharp调用示例
-附件内包含了模拟报警信息发送程序和模拟报警信息接收程序的源码供参考，
+示例代码[下载](https://github.com/suresecure/suresecure-ivs-sdk-demo)
+
 ###环境需求
 * .NET Framework 4.5+
 * Visual Studio 2013 or 2015. DEMO程序为VS2013编译
