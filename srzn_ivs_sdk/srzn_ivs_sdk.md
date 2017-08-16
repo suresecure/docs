@@ -147,8 +147,21 @@ message HeartbeatRequest{
 }
 ```
 
+##C++调用示例
+目前C++使用GRPC需要从源码编译，请按照[此处说明](https://github.com/grpc/grpc/blob/master/INSTALL.md)
+编译并安装GRPC。
+我们在github上也提供了C++版本的示例客户端和服务端程序:
+[Suresecure ivs sdk demo cpp](https://github.com/suresecure/ivs-sdk-demo-cpp.git)。
+请使用如下命令clone:
+```
+git clone --recursive https://github.com/suresecure/ivs-sdk-demo-cpp.git
+```
+然后执行make即可编译。
+
+
 ##Csharp调用示例
-附件内包含了模拟报警信息发送程序和模拟报警信息接收程序的源码供参考，
+示例代码[下载](https://github.com/suresecure/suresecure-ivs-sdk-demo)
+
 ###环境需求
 * .NET Framework 4.5+
 * Visual Studio 2013 or 2015. DEMO程序为VS2013编译

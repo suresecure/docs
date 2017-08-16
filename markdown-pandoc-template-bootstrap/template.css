@@ -271,6 +271,9 @@ a:focus {
 .span12 {
   width: 940px;
 }
+.span12 > p{
+  text-indent:2em;
+}
 .span11 {
   width: 860px;
 }
@@ -279,6 +282,9 @@ a:focus {
 }
 .span9 {
   width: 700px;
+}
+.span9 > p{
+  text-indent:2em;
 }
 .span8 {
   width: 620px;
